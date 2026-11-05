@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e69a43">
+<meta name="description" content="Vote in the MBe Social fall favorites bracket.">
+<title>Fall Favorites Bracket | MBe Social</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍁</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600;1,700;1,800&display=swap');
+:root{--cream:#fff5e8;--pale:#ffe9c9;--muted:#e7b99b;--gold:#ffd15b;--yellow:#ffbf3f;--orange:#ff783b;--rust:#da482c;--red:#a6292c;--wine:#4b1514;--line:rgba(255,224,181,.22);--glass:rgba(255,243,221,.085);--deep:#30100f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--cream);font-family:"DM Sans",Arial,sans-serif;background:radial-gradient(ellipse at 76% 12%,rgba(192,57,31,.58),transparent 34%),radial-gradient(ellipse at 12% 54%,rgba(115,29,30,.55),transparent 39%),linear-gradient(137deg,#35100f 0%,#611a16 47%,#8c291d 100%);overflow-x:hidden}
+button{font:inherit}
+.page{position:relative;min-height:100vh;isolation:isolate;overflow:hidden}
+.page:before,.page:after{content:"";position:absolute;pointer-events:none;z-index:-1;border:1px solid rgba(255,203,107,.16);border-radius:50%}
+.page:before{width:700px;height:700px;right:-280px;top:110px;box-shadow:0 0 0 42px rgba(255,203,107,.025),0 0 0 84px rgba(255,203,107,.025),0 0 0 126px rgba(255,203,107,.025)}
+.page:after{width:510px;height:510px;left:-305px;top:660px;box-shadow:0 0 0 34px rgba(255,203,107,.026),0 0 0 68px rgba(255,203,107,.026)}
+.shell{width:min(1120px,100% - 48px);margin:0 auto;padding:23px 0 42px}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;font-family:Outfit,sans-serif;font-size:12px;letter-spacing:.17em;font-weight:800;text-transform:uppercase}
+.mark{display:flex;align-items:center;justify-content:center;gap:3px;width:34px;height:34px;border:1px solid rgba(255,209,91,.54);border-radius:50%;background:rgba(255,209,91,.09)}
+.mark i{display:block;width:3px;height:13px;background:var(--gold);transform:skew(-28deg);border-radius:2px}
+.mark i:nth-child(2){height:17px;background:var(--orange)}.mark i:nth-child(3){height:11px;background:var(--cream)}
+.header-right{display:flex;align-items:center;gap:10px}
+.event-tag{border:1px solid var(--line);border-radius:99px;padding:9px 13px;color:#f4caae;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;background:rgba(48,16,15,.2)}
+.hero{position:relative;text-align:center;max-width:820px;margin:64px auto 33px}
+.kicker{display:inline-flex;align-items:center;gap:9px;color:var(--gold);font:800 11px Outfit,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.kicker:before,.kicker:after{content:"";width:24px;height:2px;background:var(--orange);border-radius:3px}
+h1{margin:16px 0 0;font:800 clamp(44px,8vw,88px)/.91 Outfit,sans-serif;letter-spacing:-.055em;text-transform:uppercase}
+h1 span{display:block;color:var(--gold);font-style:italic;font-weight:800}
+.hero-copy{max-width:605px;margin:19px auto 0;color:#f0c9aa;font-size:16px;line-height:1.6}
+.preview-label{display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:10px 14px;border:1px solid rgba(255,209,91,.28);border-radius:9px;background:rgba(255,209,91,.1);color:#ffe8bb;font-size:11px;line-height:1.45;text-align:left}
+.preview-label b{color:var(--gold)}
+.daybar{display:flex;align-items:center;gap:16px;max-width:930px;margin:0 auto 14px}
+.daylabel{white-space:nowrap;font:700 11px Outfit,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#ffdc99}
+.dayline{height:1px;flex:1;background:linear-gradient(90deg,rgba(255,196,82,.55),rgba(255,196,82,.05))}
+.daymeta{white-space:nowrap;color:#dfb197;font-size:11px}
+.vote-card{max-width:930px;margin:0 auto;padding:26px;border:1px solid rgba(255,232,197,.2);border-radius:18px;background:linear-gradient(135deg,rgba(124,38,29,.74),rgba(65,20,20,.82));box-shadow:0 22px 60px rgba(23,7,8,.29);backdrop-filter:blur(8px)}
+.card-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:19px}
+.card-eyebrow{font:800 10px Outfit,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--orange)}
+h2{margin:4px 0 0;font:700 clamp(23px,4vw,34px)/1.1 Outfit,sans-serif;letter-spacing:-.03em}
+.card-side{text-align:right;color:#e2b8a0;font-size:11px;line-height:1.45}
+.card-side strong{display:block;color:var(--gold);font:700 13px Outfit,sans-serif}
+.matches{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.match{padding:17px;border:1px solid rgba(255,233,201,.2);border-radius:13px;background:rgba(255,248,234,.065);transition:border-color .2s,background .2s}
+.match.chosen{border-color:rgba(255,209,91,.72);background:rgba(255,198,73,.095)}
+.match-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;color:#efb99a;font:700 9px Outfit,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.match-top span:last-child{color:#d99b79}
+.options{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:8px}
+.option{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:109px;padding:13px;border:1px solid rgba(255,232,197,.22);border-radius:10px;background:rgba(38,13,13,.23);color:var(--cream);text-align:left;cursor:pointer;transition:transform .16s,border-color .16s,background .16s}
+.option:hover:not(:disabled){transform:translateY(-2px);border-color:var(--gold);background:rgba(255,211,106,.1)}
+.option[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset;background:rgba(255,199,65,.14)}
+.option:disabled{cursor:default}
+.option-icon{font-size:24px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.18))}
+.option-name{font:700 13px/1.25 Outfit,sans-serif}
+.option-note{margin-top:4px;color:#dfbba4;font-size:9px;line-height:1.35}
+.vs{align-self:center;color:#e5b982;font:italic 600 11px Outfit,sans-serif}
+.check{position:absolute;right:9px;top:9px;display:none;width:18px;height:18px;align-items:center;justify-content:center;border-radius:50%;background:var(--gold);color:#4a1812;font-size:11px;font-weight:800}
+.option[aria-pressed="true"] .check{display:flex}
+.ballot-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,233,201,.16)}
+.ballot-hint{color:#e5baa0;font-size:11px;line-height:1.45}
+.action{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:0 18px;border:0;border-radius:8px;background:linear-gradient(110deg,var(--orange),var(--yellow));color:#421512;font:800 11px Outfit,sans-serif;letter-spacing:.03em;cursor:pointer;box-shadow:0 6px 20px rgba(247,113,42,.18);transition:transform .15s,filter .15s}
+.action:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.06)}
+.action:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
+.action.secondary{border:1px solid rgba(255,218,160,.32);background:transparent;color:#ffdfaa;box-shadow:none}
+.results{display:none;margin-top:17px;padding:18px;border:1px solid rgba(255,209,91,.3);border-radius:12px;background:rgba(44,15,14,.38)}
+.results.show{display:block;animation:appear .3s ease}
+.results-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.results-title h3{margin:0;font:700 17px Outfit,sans-serif}
+.results-title span{color:#edbd72;font:700 9px Outfit,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.result-row{display:grid;grid-template-columns:minmax(110px,1.3fr) 3fr 42px;align-items:center;gap:11px;margin:10px 0;color:#f8dfc6;font-size:11px}
+.result-track{height:8px;border-radius:9px;background:rgba(255,239,215,.13);overflow:hidden}
+.result-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--rust),var(--yellow))}
+.result-row em{font-style:normal;color:var(--gold);font-weight:700;text-align:right}
+.result-disclaimer{margin:13px 0 0;color:#dcae93;font-size:10px;line-height:1.45}
+.next-step{max-width:930px;margin:14px auto 0;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 17px;border:1px solid rgba(255,228,191,.14);border-radius:11px;background:rgba(255,248,233,.045)}
+.next-step strong{display:block;color:#ffe3aa;font:700 11px Outfit,sans-serif}
+.next-step span{display:block;margin-top:3px;color:#d7ad94;font-size:10px}
+.lock-icon{display:grid;place-items:center;width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:rgba(255,209,91,.12);color:var(--gold);font-size:15px}
+footer{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:27px auto 0;max-width:930px;color:#d6a98e;font-size:9px;line-height:1.5}
+.footer-brand{font:800 9px Outfit,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#f7d9bd}
+.reset{border:0;background:transparent;color:#f5c7a6;text-decoration:underline;text-underline-offset:3px;font-size:10px;cursor:pointer}
+.reset:hover{color:var(--gold)}
+:focus-visible{outline:3px solid #ffe07b;outline-offset:3px}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.shell{width:min(100% - 30px,600px);padding-top:17px}.hero{margin-top:48px}.matches{grid-template-columns:1fr}.match{padding:14px}.option{min-height:88px}.daybar{gap:10px}.vote-card{padding:18px}.card-head{align-items:flex-start}.card-side{max-width:105px}.ballot-footer{align-items:stretch;flex-direction:column}.action{width:100%}}
+@media(max-width:420px){.brand{font-size:10px;letter-spacing:.11em}.brand .mark{width:30px;height:30px}.event-tag{padding:8px 9px;font-size:8px}.hero{margin-top:40px}.hero-copy{font-size:14px}.preview-label{font-size:10px}.options{gap:6px}.option{padding:10px}.option-name{font-size:12px}.option-note{font-size:8px}.vs{font-size:9px}.footer-brand{display:none}}
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{--cream:#46342b;--pale:#725c4f;--muted:#806b5d;--gold:#c88b32;--yellow:#dfa64a;--orange:#bd5838;--rust:#a9442c;--red:#8f3b31;--wine:#5b2e26;--line:#e8d6be;--glass:rgba(255,252,246,.83);--deep:#f5ecdf}
+body{color:#46342b;background:radial-gradient(ellipse at 86% 9%,rgba(219,171,102,.2),transparent 26%),radial-gradient(ellipse at 9% 72%,rgba(185,94,57,.10),transparent 28%),linear-gradient(135deg,#f8f1e6 0%,#f3e7d6 54%,#f7eee2 100%)}
+.page{background-image:radial-gradient(rgba(126,86,54,.07) .7px,transparent .7px);background-size:13px 13px}
+.page:before,.page:after{content:none}
+.shell{position:relative;z-index:1}
+.brand{color:#574238;font-family:'DM Sans',sans-serif;letter-spacing:.14em}
+.mark{border-color:#d6b98f;background:#fff8ee}
+.mark i{background:#c8633c}.mark i:nth-child(2){background:#d5a343}.mark i:nth-child(3){background:#88906d}
+.event-tag{color:#795342;background:rgba(255,251,244,.76);border-color:#e4cfb3;letter-spacing:.1em}
+.hero{margin-top:51px}
+.kicker{color:#9b5135;font-family:'DM Sans',sans-serif;letter-spacing:.14em}
+.kicker:before,.kicker:after{background:#d3a14b}
+h1{color:#49352b;font-family:'DM Serif Display',Georgia,serif;font-size:clamp(46px,7vw,78px);line-height:.98;letter-spacing:-.035em;text-transform:none;font-weight:400}
+h1 span{color:#ad4f32;font-style:italic;font-weight:400}
+.hero-copy{color:#735d50}
+.preview-label{color:#6c5141;background:#f4e4cd;border-color:#e6ceb0;border-radius:12px}
+.preview-label b{color:#964b31}
+.daybar{gap:12px}
+.daylabel{color:#7e583e;font-family:'DM Sans',sans-serif;letter-spacing:.06em}
+.dayline{background:linear-gradient(90deg,#d4a65d,#e8d7bd)}
+.daymeta{color:#856e5d}
+.vote-card{background:rgba(255,252,247,.91);border-color:#e9d9c4;box-shadow:0 18px 42px rgba(93,61,37,.10);backdrop-filter:blur(5px)}
+.card-eyebrow{color:#ae5838;font-family:'DM Sans',sans-serif;letter-spacing:.13em}
+h2{color:#49352b;font-family:'DM Serif Display',Georgia,serif;font-weight:400;letter-spacing:-.02em}
+.card-side{color:#836b5a}
+.card-side strong{color:#9c542f;font-family:'DM Sans',sans-serif}
+.match{background:#fbf5eb;border-color:#ead9c2}
+.match.chosen{background:#f7ebd8;border-color:#c78344}
+.match-top{color:#9a5739;font-family:'DM Sans',sans-serif;letter-spacing:.1em}
+.match-top span:last-child{color:#9b8068}
+.option{background:#fffdf8;border-color:#e8d8c3;color:#46342b}
+.option:hover:not(:disabled){border-color:#c67b4b;background:#fff5e6}
+.option[aria-pressed="true"]{border-color:#aa5635;background:#f8e8d2;box-shadow:0 0 0 1px #aa5635 inset}
+.option-note{color:#846d5b}
+.check{background:#ad5435;color:#fffaf1}
+.vs{color:#a07853}
+.ballot-footer{border-color:#e9ddce}
+.ballot-hint{color:#806a59}
+.action{background:linear-gradient(110deg,#b95134,#d68a3e);color:#fff9ef;box-shadow:0 5px 14px rgba(154,77,46,.16)}
+.action:hover:not(:disabled){filter:brightness(1.04)}
+.action:disabled{background:#d8cec1;color:#fffaf4;opacity:1}
+.action.secondary{background:transparent;border-color:#c9a77e;color:#8d4c32;box-shadow:none}
+.results{background:#f8efe2;border-color:#e1c79f}
+.results-title h3{color:#49352b;font-family:'DM Serif Display',Georgia,serif;font-weight:400}
+.results-title span{color:#9c5c37}
+.result-row{color:#554138}
+.result-track{background:#eadfce}
+.result-fill{background:linear-gradient(90deg,#ba5635,#dda446)}
+.result-row em{color:#914a30}
+.result-disclaimer{color:#806a59}
+.next-step{background:rgba(255,251,244,.72);border-color:#e8d9c5}
+.next-step strong{color:#744833;font-family:'DM Sans',sans-serif}
+.next-step span{color:#806b5d}
+.lock-icon{background:#f3e2c9;color:#a95b36}
+footer{color:#806b5d}
+.footer-brand{color:#754a36}
+.reset{color:#8c5c44}
+.reset:hover{color:#ae4e31}
+.ambient-leaves{position:absolute;z-index:0;pointer-events:none;opacity:.5}
+.ambient-leaves svg{display:block;width:100%;height:auto;overflow:visible}
+.ambient-leaves.right{width:218px;right:max(2vw,20px);top:106px;transform:rotate(8deg)}
+.ambient-leaves.left{width:170px;left:max(1vw,12px);bottom:26px;transform:rotate(-15deg);opacity:.35}
+@media(max-width:760px){.ambient-leaves.right{width:120px;right:-17px;top:104px;opacity:.26}.ambient-leaves.left{width:105px;left:-20px;bottom:10px;opacity:.2}.hero{margin-top:39px}}
+@media(max-width:420px){.ambient-leaves.right{width:82px;top:96px;right:-18px}.ambient-leaves.left{display:none}.brand{color:#574238}}
+</style>
+<style>
+:root{--cream:#fff8ec;--pale:#f6e6cc;--muted:#78604f;--gold:#e4aa46;--yellow:#efbd55;--orange:#c86b36;--rust:#a94e32;--red:#943f32;--wine:#6d3426;--line:#ead7bb;--glass:rgba(255,249,239,.92);--deep:#f8e9cf}
+body{color:#4a3428;background:radial-gradient(ellipse at 14% 7%,rgba(255,224,139,.8),transparent 29%),radial-gradient(ellipse at 90% 38%,rgba(224,120,55,.32),transparent 30%),linear-gradient(132deg,#f3c96d 0%,#edaa53 35%,#df8745 67%,#e8b45c 100%);background-attachment:fixed}
+.page{background:none}
+.page:before,.page:after{content:none}
+.ambient-leaves{opacity:.88}
+.ambient-leaves img{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 13px rgba(108,49,25,.14));mix-blend-mode:multiply}
+.ambient-leaves.right{width:270px;right:-38px;top:78px;transform:rotate(10deg);opacity:.88}
+.ambient-leaves.left{width:305px;left:-62px;bottom:3px;transform:scaleX(-1) rotate(-12deg);opacity:.78}
+.shell{position:relative;z-index:1}
+.brand{gap:13px;color:#563c2d;font-family:'DM Sans',sans-serif;font-size:14px;letter-spacing:.01em;text-transform:none}
+.brand-logo{display:flex;align-items:center;justify-content:center;width:155px;height:55px;padding:5px 9px;border-radius:10px;background:#fff;box-shadow:0 5px 16px rgba(82,46,28,.12)}
+.brand-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.brand-name{font-weight:700;white-space:nowrap}
+.event-tag{color:#76513a;background:rgba(255,248,234,.8);border-color:rgba(138,83,46,.22)}
+.hero{margin-top:42px}
+.kicker{color:#884c31}
+.kicker:before,.kicker:after{background:#b75b35}
+h1{color:#4c3529}
+h1 span{color:#a84b2f}
+.hero-copy{color:#604a3b}
+.preview-label{background:rgba(255,249,239,.78);border-color:rgba(143,87,49,.22);box-shadow:0 4px 14px rgba(97,53,29,.06)}
+.preview-label b{color:#91462e}
+.daylabel{color:#74462f}
+.dayline{background:linear-gradient(90deg,rgba(156,84,48,.5),rgba(255,248,234,.25))}
+.daymeta{color:#694a37}
+.vote-card{background:rgba(255,250,241,.94);border-color:rgba(122,74,43,.17);box-shadow:0 18px 48px rgba(95,52,25,.13);backdrop-filter:blur(9px)}
+.card-eyebrow{color:#a75232}
+h2{color:#4c3529}
+.card-side{color:#765d4a}
+.card-side strong{color:#98502e}
+.match{background:rgba(255,254,249,.9);border-color:#ead9c1}
+.match.chosen{background:#fbefdb;border-color:#cf8a45}
+.match-top{color:#945334}
+.match-top span:last-child{color:#92745b}
+.option{background:#fffdf8;border-color:#ebddca;color:#49372d}
+.option:hover:not(:disabled){border-color:#c87a42;background:#fff6e8}
+.option[aria-pressed="true"]{border-color:#ad5633;background:#faecd8;box-shadow:0 0 0 1px #ad5633 inset}
+.option-note{color:#7b6655}
+.check{background:#a94e32;color:white}
+.vs{color:#9b7551}
+.ballot-footer{border-color:#e8dccb}
+.ballot-hint{color:#755e4e}
+.action{background:linear-gradient(115deg,#b95532,#d7833c);color:#fff9ee;box-shadow:0 5px 15px rgba(145,72,38,.16)}
+.action:disabled{background:#d8cbb7;color:#fffdf7;opacity:1}
+.action.secondary{background:rgba(255,249,239,.6);border-color:#c79b66;color:#8d4a2e}
+.results{background:#fbf2e4;border-color:#e4ceaa}
+.results-title h3{color:#49372c}
+.results-title span,.result-row em{color:#994a2d}
+.result-row{color:#554137}
+.result-track{background:#eadcc6}
+.result-fill{background:linear-gradient(90deg,#bd5e36,#e0a342)}
+.result-disclaimer{color:#796351}
+.next-step{background:rgba(255,249,239,.78);border-color:rgba(126,76,42,.16)}
+.next-step strong{color:#69432f}
+.next-step span{color:#78614f}
+.lock-icon{background:#f1dfc0;color:#a65333}
+footer{color:#705641}
+.footer-brand{color:#67452f}
+.reset{color:#86533a}
+.reset:hover{color:#a4482e}
+@media(max-width:760px){.ambient-leaves.right{width:162px;right:-76px;top:118px;opacity:.62}.ambient-leaves.left{width:186px;left:-92px;bottom:0;opacity:.57}.hero{margin-top:35px}}
+@media(max-width:560px){.brand{gap:8px;font-size:12px}.brand-logo{width:108px;height:43px;padding:4px 6px}.event-tag{font-size:8px;padding:8px}.ambient-leaves.right{width:120px;right:-63px;top:125px;opacity:.52}.ambient-leaves.left{width:135px;left:-78px;opacity:.48}}
+@media(max-width:420px){.brand{font-size:11px}.brand-logo{width:92px;height:38px}.event-tag{letter-spacing:.04em}.hero{margin-top:28px}.ambient-leaves.right{width:94px;right:-55px;top:118px}}
+.brand-logo{width:150px;height:59px;padding:0;border-radius:0;background:transparent;box-shadow:none}
+.brand-logo img{filter:drop-shadow(0 2px 1px rgba(93,54,31,.12))}
+.brand-name{display:flex;align-items:baseline;gap:4px;color:#4b3429;font-family:'DM Sans',sans-serif;font-size:16px;letter-spacing:.01em}
+.brand-name strong{font-weight:800}
+.brand-name em{color:#914a31;font-family:'DM Serif Display',Georgia,serif;font-size:18px;font-weight:400;font-style:italic}
+@media(max-width:560px){.brand-logo{width:108px;height:43px;padding:0}.brand-name{font-size:13px;gap:3px}.brand-name em{font-size:15px}}
+@media(max-width:420px){.brand-logo{width:92px;height:36px}.brand-name{font-size:11px}.brand-name em{font-size:13px}}
+.how-it-works{max-width:930px;margin:22px auto 0;padding:25px 27px 23px;border:1px solid rgba(122,74,43,.17);border-radius:16px;background:rgba(255,250,241,.87);box-shadow:0 12px 32px rgba(95,52,25,.08)}
+.how-kicker{color:#a75232;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.how-it-works h2{margin:6px 0 8px;font-size:25px}
+.how-copy{max-width:780px;margin:0;color:#705747;font-size:12px;line-height:1.7}
+.how-stats{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}
+.how-stat{display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid #ead9c1;border-radius:9px;background:#fffdf8}
+.how-stat strong{color:#a45131;font-family:'DM Serif Display',Georgia,serif;font-size:18px;font-weight:400}
+.how-stat span{color:#7a6351;font-size:9px}
+@media(max-width:560px){.how-it-works{padding:20px 17px}.how-it-works h2{font-size:22px}.how-copy{font-size:11px}}
+</style>
+<style>
+.option-icon.pic{width:48px;height:48px;margin-bottom:8px;filter:drop-shadow(0 3px 4px rgba(108,49,25,.12))}
+.option-icon.pic svg{display:block}
+.mini-pic{display:inline-block;width:22px;height:22px;margin-right:6px;vertical-align:-6px}
+.mini-pic svg{display:block}
+.champion .crown.pic{width:110px;height:110px;margin:0 auto}
+/* Gradient lives on the page wrapper so it always runs the full length of the page */
+body{background:#e8b45c;background-attachment:scroll}
+.page{background:radial-gradient(ellipse 60% 900px at 14% 0,rgba(255,224,139,.8),transparent 70%),radial-gradient(ellipse 45% 700px at 92% 420px,rgba(224,120,55,.32),transparent 70%),linear-gradient(170deg,#f3c96d 0%,#edaa53 30%,#df8745 62%,#e8b45c 100%)!important}
+.stage-message{max-width:560px;padding:6px 2px 4px}
+.stage-message h2{margin:0 0 8px}
+.stage-message p{margin:0;color:#705747;font-size:14px;line-height:1.6}
+.stage-message .when{display:inline-block;margin-top:14px;padding:9px 13px;border:1px solid #ead9c1;border-radius:9px;background:#fffdf8;color:#8f4a2e;font-weight:700;font-size:13px}
+.result-group{margin-top:4px}
+.result-group+.result-group{margin-top:16px;padding-top:14px;border-top:1px solid #ead9c1}
+.result-match-label{margin:0 0 4px;color:#945334;font-size:11px;font-weight:700}
+.result-row .won{color:#a94e32;font-weight:700}
+.result-row .tag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:99px;background:#f1dfc0;color:#8d4a2e;font-size:9px;font-weight:700;vertical-align:1px}
+.result-meta{margin:12px 0 0;color:#796351;font-size:11px}
+.results-block{max-width:930px;margin:14px auto 0;padding:22px 26px;border:1px solid rgba(122,74,43,.17);border-radius:16px;background:rgba(255,250,241,.92);box-shadow:0 12px 32px rgba(95,52,25,.08)}
+.results-block h2{margin:0 0 4px;font-size:24px}
+.results-block .sub{margin:0 0 14px;color:#765d4a;font-size:12px}
+.earlier{margin-top:16px;border-top:1px solid #ead9c1;padding-top:12px}
+.earlier summary{cursor:pointer;color:#8d4a2e;font-weight:700;font-size:12px}
+.earlier .day-block{margin-top:14px}
+.earlier h3{margin:0 0 6px;font:400 17px 'DM Serif Display',Georgia,serif;color:#49372c}
+.champion{text-align:center;padding:14px 6px 8px}
+.champion .crown{font-size:58px;line-height:1;filter:drop-shadow(0 6px 10px rgba(108,49,25,.18))}
+.champion h2{margin:12px 0 4px;font-size:clamp(34px,6vw,52px)}
+.champion p{margin:0 auto;max-width:460px;color:#705747;font-size:14px;line-height:1.6}
+.champion .champ-label{color:#a75232;font-size:13px;font-weight:700}
+.picked-note{margin-top:4px;color:#a94e32;font-size:10px;font-weight:700}
+.demo-flag{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:99px;background:#4c3529;color:#fff8ec;font-size:10px;font-weight:700}
+.error-text{color:#94402c}
+@media(max-width:560px){.results-block{padding:18px 16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="ambient-leaves right" aria-hidden="true"><img src="assets/autumn-maple-leaves.png" alt=""></div>
+<div class="ambient-leaves left" aria-hidden="true"><img src="assets/autumn-maple-leaves.png" alt=""></div>
+<main class="shell">
+<header>
+  <div class="brand"><span class="brand-logo"><img src="assets/mbe-social-logo.png" alt="Marketbridge MBe Social logo"></span><span class="brand-name"><strong>MBe</strong><em>Social</em></span></div>
+  <div class="header-right"><span class="event-tag">Fall 2026 bracket</span></div>
+</header>
+<section class="hero">
+  <div class="kicker">A cozy-season bake-off</div>
+  <h1>Fall <span>favorites</span></h1>
+  <p class="hero-copy">A little friendly MBe Social taste test. Two cozy-season pairings each workday, with only today’s treats revealed.</p>
+  <div class="preview-label"><span aria-hidden="true">✦</span><span><b>Votes are anonymous.</b> One ballot a day, and once it’s in, it’s in.<span id="demoFlag"></span></span></div>
+</section>
+<div class="daybar" aria-label="Voting schedule">
+  <span class="daylabel" id="dayLabel">Today’s bake-off</span><span class="dayline"></span><span class="daymeta" id="dayMeta">Checking the oven…</span>
+</div>
+<section class="vote-card" id="stage" aria-live="polite">
+  <div class="stage-message"><h2>Warming up</h2><p>Fetching today’s treats.</p></div>
+</section>
+<section class="results-block" id="resultsBlock" hidden aria-live="polite"></section>
+<section class="next-step" aria-label="Future matchups remain hidden">
+  <span class="lock-icon" aria-hidden="true">⌑</span>
+  <div><strong>What’s next stays under wraps</strong><span>Future matchups and entrants stay hidden until their voting day.</span></div>
+  <span class="lock-icon" aria-hidden="true">✦</span>
+</section>
+<section class="how-it-works" aria-labelledby="how-title">
+  <div class="how-kicker">The whole bake-off, in a nutshell</div>
+  <h2 id="how-title">A few picks. A little suspense. One very worthy winner.</h2>
+  <p class="how-copy">Sixteen fall favorites. Fifteen matchups. Eight weekdays of voting, plus one day to announce the champion. Most days bring two pairings; the final gets a day of its own. Pick one winner in each matchup and lock your ballot before the daily close. Once your picks are in, they’re in. No weekend rounds and no future-matchup spoilers. Each day’s results show up here as soon as voting closes. One treat gets the crown; the rest of us get to say we called it.</p>
+  <div class="how-stats" aria-label="Bracket at a glance"><div class="how-stat"><strong>16</strong><span>fall favorites</span></div><div class="how-stat"><strong>8 + 1</strong><span>voting days + winner reveal</span></div><div class="how-stat"><strong>2 → 1</strong><span>daily matchups, then the final</span></div></div>
+</section>
+<footer>
+  <span class="footer-brand">MBe Social · Marketbridge</span>
+  <span>Sixteen favorites, fifteen matchups, one champion</span>
+  <span></span>
+</footer>
+</main>
+</div>
+<script src="config.js"></script>
+<script>
+// Little treat illustrations. Each is drawn on a 64x64 grid.
+var O='stroke="#4a2c1e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"';
+var TREAT_ICONS={
+"pumpkin-pie":'<path d="M8 44 L54 30 L56 40 L12 52 Z" fill="#b9763a" '+O+'/><path d="M8 44 L54 30 L50 24 Q30 22 10 36 Z" fill="#d9682e" '+O+'/><path d="M10 36 Q30 22 50 24 L54 30" fill="none" stroke="#f0b65a" stroke-width="5" stroke-linecap="round"/><path d="M10 36 Q30 22 50 24 L54 30" fill="none" '+O+'/><path d="M26 30 q2-8 8-6 q5 2 1 7 q-4 3-9-1Z" fill="#fff6e6" '+O+'/>',
+"apple-pie":'<ellipse cx="32" cy="38" rx="25" ry="12" fill="#b9763a" '+O+'/><ellipse cx="32" cy="34" rx="25" ry="12" fill="#e3a857" '+O+'/><path d="M18 27 L18 41 M26 23 L26 46 M34 22 L34 46 M42 23 L42 45 M10 31 L54 31 M9 37 L55 37" stroke="#b9763a" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="32" cy="34" rx="25" ry="12" fill="none" '+O+'/>',
+"pumpkin-spice-latte":'<path d="M18 24 L46 24 L42 56 L22 56 Z" fill="#fff6e6" '+O+'/><path d="M19.5 34 L44.5 34 L43.2 44 L20.8 44 Z" fill="#c8822e" '+O+'/><path d="M16 24 Q16 14 26 14 Q28 8 34 9 Q40 8 42 14 Q48 14 48 24 Z" fill="#fffaf2" '+O+'/><circle cx="28" cy="16" r="1.3" fill="#a9442c"/><circle cx="35" cy="13" r="1.3" fill="#a9442c"/><circle cx="40" cy="18" r="1.3" fill="#a9442c"/><circle cx="31" cy="20" r="1.1" fill="#a9442c"/>',
+"hot-apple-cider":'<path d="M14 22 L42 22 L40 54 L16 54 Z" fill="#c7642c" '+O+'/><path d="M41 28 q10 0 10 9 q0 9-11 9" fill="none" '+O+'/><path d="M15 26 L41 26" stroke="#e8a04a" stroke-width="3"/><path d="M38 4 L28 30" stroke="#8a4a26" stroke-width="5" stroke-linecap="round"/><path d="M38 4 L28 30" '+O+' fill="none"/><circle cx="20" cy="22" r="7" fill="#f2b33d" '+O+'/><path d="M20 15 V29 M13 22 H27 M15 17 L25 27 M25 17 L15 27" stroke="#d98b1f" stroke-width="1.2"/>',
+"apple-cider-donut":'<circle cx="32" cy="34" r="22" fill="#d89a52" '+O+'/><circle cx="32" cy="34" r="7" fill="#fff4df" '+O+'/><g fill="#fff6e6"><circle cx="20" cy="26" r="1.6"/><circle cx="28" cy="20" r="1.4"/><circle cx="40" cy="22" r="1.6"/><circle cx="46" cy="32" r="1.4"/><circle cx="44" cy="44" r="1.6"/><circle cx="34" cy="49" r="1.4"/><circle cx="22" cy="45" r="1.6"/><circle cx="17" cy="35" r="1.3"/><circle cx="36" cy="27" r="1.1"/><circle cx="26" cy="40" r="1.1"/></g>',
+"cinnamon-rolls":'<ellipse cx="32" cy="38" rx="24" ry="16" fill="#d89a52" '+O+'/><path d="M32 38 m-3 0 a3 3 0 1 1 6 1 a7 6 0 1 1 -13 -1 a11 9 0 1 1 22 2 a15 12 0 1 1 -30 -2" fill="none" stroke="#8a4a26" stroke-width="2.4" stroke-linecap="round"/><path d="M14 30 q6 6 12 1 q6 7 13 0 q6 6 12 -1" fill="none" stroke="#fffaf2" stroke-width="4" stroke-linecap="round"/>',
+"caramel-apples":'<path d="M32 4 L32 22" stroke="#c9a874" stroke-width="5" stroke-linecap="round"/><path d="M32 4 L32 22" '+O+'/><path d="M32 22 C22 16 10 22 12 38 C14 52 24 58 32 54 C40 58 50 52 52 38 C54 22 42 16 32 22Z" fill="#b8352b" '+O+'/><path d="M13 34 C12 26 20 18 32 23 C44 18 52 26 51 34 C46 40 42 33 38 39 C34 44 30 36 26 41 C22 45 18 36 13 34Z" fill="#c8822e" '+O+'/>',
+"candy-corn":'<path d="M32 6 C40 18 52 40 50 52 Q32 58 14 52 C12 40 24 18 32 6Z" fill="#f4f0e4" '+O+'/><path d="M20.5 32 C17 40 15 47 14 52 Q32 58 50 52 C49 47 47 40 43.5 32 Q32 35 20.5 32Z" fill="#e9862f"/><path d="M15.3 45 C14.6 48 14 50 14 52 Q32 58 50 52 C50 50 49.4 48 48.7 45 Q32 49 15.3 45Z" fill="#f2c13d"/><path d="M32 6 C40 18 52 40 50 52 Q32 58 14 52 C12 40 24 18 32 6Z" fill="none" '+O+'/>',
+"pecan-pie":'<ellipse cx="32" cy="38" rx="25" ry="12" fill="#b9763a" '+O+'/><ellipse cx="32" cy="34" rx="25" ry="12" fill="#e3a857" '+O+'/><ellipse cx="32" cy="34" rx="20" ry="8.5" fill="#7a3d1f" '+O+'/><g fill="#a55a2a" '+O+'><ellipse cx="22" cy="33" rx="4" ry="2.4"/><ellipse cx="32" cy="29.5" rx="4" ry="2.4"/><ellipse cx="42" cy="33" rx="4" ry="2.4"/><ellipse cx="27" cy="38" rx="4" ry="2.4"/><ellipse cx="37" cy="38" rx="4" ry="2.4"/></g>',
+"sweet-potato-casserole":'<path d="M8 34 L56 34 L52 54 Q32 57 12 54 Z" fill="#e7dccb" '+O+'/><path d="M4 34 L12 34 M52 34 L60 34" '+O+'/><path d="M8 34 Q32 22 56 34 Z" fill="#e9862f" '+O+'/><g fill="#fffaf2" '+O+'><rect x="14" y="23" width="9" height="8" rx="3"/><rect x="25" y="19" width="9" height="8" rx="3"/><rect x="36" y="21" width="9" height="8" rx="3"/><rect x="20" y="27" width="8" height="6" rx="2.5"/><rect x="31" y="26" width="8" height="6" rx="2.5"/><rect x="42" y="27" width="7" height="6" rx="2.5"/></g><path d="M17 26 q3-2 5 0 M38 24 q3-2 5 0" stroke="#d8a25a" stroke-width="1.5" fill="none"/><path d="M14 44 h36" stroke="#d2c3ac" stroke-width="2" stroke-linecap="round"/>',
+"smores":'<rect x="10" y="44" width="44" height="10" rx="2" fill="#d6a05a" '+O+'/><rect x="12" y="38" width="40" height="7" rx="1.5" fill="#5a3020" '+O+'/><path d="M10 38 C8 30 14 24 32 24 C50 24 56 30 54 38 Z" fill="#fffaf2" '+O+'/><path d="M20 28 q4-3 9-1" stroke="#d8a25a" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="10" y="12" width="44" height="10" rx="2" fill="#d6a05a" '+O+'/><g fill="#b9763a"><circle cx="18" cy="17" r="1.2"/><circle cx="26" cy="17" r="1.2"/><circle cx="38" cy="17" r="1.2"/><circle cx="46" cy="17" r="1.2"/></g>',
+"hot-chocolate":'<path d="M12 22 L44 22 L42 54 L14 54 Z" fill="#c95b3a" '+O+'/><path d="M43 28 q11 0 11 9 q0 9-12 9" fill="none" '+O+'/><path d="M12.4 22 L43.6 22 L43.3 27 L12.7 27 Z" fill="#5a3020"/><g fill="#fffaf2" '+O+'><rect x="15" y="15" width="8" height="8" rx="2.5"/><rect x="25" y="12" width="8" height="8" rx="2.5"/><rect x="34" y="16" width="8" height="8" rx="2.5"/></g><path d="M18 34 h20 M18 40 h20" stroke="#f0b65a" stroke-width="2" stroke-linecap="round"/>',
+"pumpkin-bread":'<path d="M6 30 Q6 18 22 18 L42 18 Q54 18 54 30 L54 50 L6 50 Z" fill="#b5642f" '+O+'/><path d="M10 28 Q18 22 30 26 Q40 21 50 28" stroke="#e8a04a" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M40 30 L58 30 L58 54 L40 54 Z" fill="#e9973f" '+O+'/><path d="M40 30 Q49 25 58 30" fill="#b5642f" '+O+'/><g fill="#a5542a"><circle cx="45" cy="38" r="1"/><circle cx="52" cy="42" r="1"/><circle cx="47" cy="48" r="1"/></g>',
+"apple-crisp":'<path d="M8 34 L56 34 L52 54 L12 54 Z" fill="#fff6e6" '+O+'/><path d="M8 34 Q14 26 20 31 Q26 25 32 30 Q38 25 44 30 Q50 26 56 34 Z" fill="#c8822e" '+O+'/><g fill="#9a5a28"><circle cx="16" cy="31" r="1.5"/><circle cx="28" cy="29" r="1.5"/><circle cx="48" cy="31" r="1.5"/></g><path d="M24 26 C22 16 28 10 34 10 C42 10 44 18 40 26 Z" fill="#fffaf2" '+O+'/><path d="M8 34 L56 34" '+O+'/><path d="M14 42 h36" stroke="#e3a857" stroke-width="2" stroke-linecap="round"/>',
+"maple-cookies":'<path d="M32 6 L36 18 L44 13 L42 25 L54 23 L48 33 L56 38 L42 42 L44 48 L34 45 L33 58 L31 58 L30 45 L20 48 L22 42 L8 38 L16 33 L10 23 L22 25 L20 13 L28 18 Z" fill="#e3a857" '+O+'/><path d="M32 16 L32 46 M32 30 L44 24 M32 30 L20 24 M32 38 L44 36 M32 38 L20 36" stroke="#c07a33" stroke-width="1.6" stroke-linecap="round"/>',
+"chai-latte":'<path d="M14 18 L46 18 L42 54 L18 54 Z" fill="#fffaf2" fill-opacity=".55" '+O+'/><path d="M15.3 30 L44.7 30 L42 54 L18 54 Z" fill="#c99a6a"/><path d="M14.6 24 L45.4 24 L44.7 30 L15.3 30 Z" fill="#f4e6cf"/><path d="M14 18 L46 18 L42 54 L18 54 Z" fill="none" '+O+'/><path d="M26 10 q-4 -4 0 -7 M34 12 q-4 -4 0 -7" stroke="#b5946f" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48 40 l3 -6 l3 6 l6 3 l-6 3 l-3 6 l-3 -6 l-6 -3 Z" fill="#8a4a26" '+O+'/>'
+};
+function treatIconSvg(key,label){
+  var body=TREAT_ICONS[key];
+  return body?'<svg viewBox="0 0 64 64" width="100%" height="100%" role="img" aria-label="'+(label||'')+'">'+body+'</svg>':null;
+}
+
+</script>
+<script>
+(function(){
+  var SB_URL=(window.SUPABASE_URL||"").trim().replace(/\/+$/,"");
+  var SB_KEY=(window.SUPABASE_KEY||"").trim();
+  var DEMO=!SB_URL||!SB_KEY;
+  var rpc=function(name,args){
+    var headers={"Content-Type":"application/json","apikey":SB_KEY};
+    if(SB_KEY.indexOf("eyJ")===0) headers.Authorization="Bearer "+SB_KEY;
+    return fetch(SB_URL+"/rest/v1/rpc/"+name,{method:"POST",headers:headers,body:JSON.stringify(args||{}),cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("http "+r.status); return r.json(); });
+  };
+  var $=function(id){return document.getElementById(id);};
+  var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+  var slug=function(s){return String(s||"").toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");};
+  // A treat's picture: a drawn illustration when the Sheet names one (or the treat's name matches one), otherwise the emoji typed in.
+  var pic=function(item){
+    var key=TREAT_ICONS[item.emoji]?item.emoji:TREAT_ICONS[slug(item.name)]?slug(item.name):null;
+    return key?{svg:treatIconSvg(key,"")}:{text:item.emoji||""};
+  };
+  var store={get:function(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+  var voter=store.get("mbe-fall-voter");
+  if(!voter){
+    voter=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("v-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,12));
+    store.set("mbe-fall-voter",voter);
+  }
+
+  var state=null, picks={}, sending=false, errorMsg="", timer=null;
+
+  var fmtTime=function(ms){return new Date(ms).toLocaleTimeString([], {hour:"numeric",minute:"2-digit",timeZoneName:"short"});};
+  var fmtWhen=function(ms){return new Date(ms).toLocaleString([], {weekday:"long",month:"long",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"});};
+  var votedKey=function(day){return (DEMO?"mbe-fall-demo-voted-":"mbe-fall-voted-day-")+day;};
+
+  /* ---------- Talking to the ballot box ---------- */
+  function fetchState(){
+    if(DEMO) return Promise.resolve(demo.state());
+    return rpc("get_state");
+  }
+  function sendVote(day,p){
+    if(DEMO) return Promise.resolve(demo.vote(day,p));
+    return rpc("cast_vote",{p_day:day,p_picks:p,p_voter:voter});
+  }
+
+  function refresh(){
+    fetchState().then(function(s){
+      if(!s||!s.ok) throw new Error("bad");
+      var prevDay=state&&state.today&&state.today.day;
+      state=s;
+      if(!s.today||s.today.day!==prevDay) picks={};
+      errorMsg="";
+      render();
+      schedule();
+    }).catch(function(){
+      if(!state){
+        $("stage").innerHTML='<div class="stage-message"><h2>The ballot box isn’t answering</h2><p class="error-text">Refresh the page in a minute. If it keeps happening, let the MBe Social team know.</p></div>';
+        $("dayMeta").textContent="Offline for a moment";
+      }
+      clearTimeout(timer); timer=setTimeout(refresh,60000);
+    });
+  }
+  // Re-check when something is due to change: a close, an open, or a reveal.
+  function schedule(){
+    clearTimeout(timer);
+    var now=Date.now(), next=now+10*60000;
+    if(state.today) next=Math.min(next,state.today.closesAt);
+    if(state.nextOpen) next=Math.min(next,state.nextOpen.opensAt);
+    timer=setTimeout(refresh,Math.max(5000,next-now+3000));
+  }
+
+  /* ---------- Rendering ---------- */
+  function render(){
+    $("demoFlag").innerHTML=DEMO?'<span class="demo-flag">Demo mode</span>':"";
+    if(state.champion) renderChampion();
+    else if(state.today) renderBallot();
+    else renderQuiet();
+    renderResults();
+  }
+
+  function renderBallot(){
+    var t=state.today, locked=store.get(votedKey(t.day));
+    var mine=locked||picks, n=t.matches.length;
+    $("dayLabel").textContent="Today’s bake-off";
+    $("dayMeta").textContent=t.round+", "+(n===1?"1 pairing":n+" pairings");
+    var html='<div class="card-head"><div><div class="card-eyebrow">'+(t.day===8?"The big one":"Fresh from the oven")+'</div><h2 id="ballot-title">'+(t.day===8?"Choose the champion":"Choose today’s treats")+'</h2></div>'+
+      '<div class="card-side"><strong>'+(n===1?"1 pick needed":n+" picks needed")+'</strong>Voting closes<br>'+esc(fmtTime(t.closesAt))+'</div></div>';
+    html+='<div class="matches"'+(n===1?' style="grid-template-columns:1fr;max-width:460px;margin:0 auto"':'')+'>'+t.matches.map(function(m,idx){
+      var chosen=mine[m.id];
+      return '<article class="match '+(chosen?'chosen':'')+'"><div class="match-top"><span>'+(n===1?"The final":"Matchup "+(idx+1))+'</span><span>'+(locked?"Locked":"Pick one")+'</span></div><div class="options">'+
+        ["a","b"].map(function(side,i){
+          var item=m[side];
+          return '<button class="option" type="button" data-match="'+m.id+'" data-side="'+side+'" aria-pressed="'+(chosen===side)+'" '+(locked||sending?"disabled":"")+'>'+
+            '<span class="check" aria-hidden="true">✓</span>'+(function(p){return p.svg?'<span class="option-icon pic" aria-hidden="true">'+p.svg+'</span>':'<span class="option-icon" aria-hidden="true">'+esc(p.text)+'</span>';})(pic(item))+
+            '<span class="option-name">'+esc(item.name)+'</span><span class="option-note">'+esc(item.note)+'</span></button>'+(i===0?'<span class="vs" aria-hidden="true">vs</span>':'');
+        }).join("")+'</div></article>';
+    }).join("")+'</div>';
+    var ready=t.matches.every(function(m){return picks[m.id];});
+    var hint=locked?"Your picks are in. Results show up here when voting closes at "+fmtTime(t.closesAt)+"."
+      :errorMsg?'<span class="error-text">'+esc(errorMsg)+'</span>'
+      :(n===1?"Pick the treat you want crowned. One shot, no take-backs.":"Pick one favorite in each matchup, then lock your ballot. No take-backs.");
+    html+='<div class="ballot-footer"><div class="ballot-hint">'+hint+'</div>'+
+      '<button class="action" id="lockBtn" type="button" '+(locked||!ready||sending?"disabled":"")+'>'+(locked?'Ballot locked <span aria-hidden="true">✓</span>':sending?"Locking…":(n===1?"Lock my pick":"Lock today’s votes"))+'</button></div>';
+    $("stage").innerHTML=html;
+
+    $("stage").querySelectorAll(".option").forEach(function(b){
+      b.addEventListener("click",function(){
+        if(store.get(votedKey(t.day))||sending) return;
+        picks[b.getAttribute("data-match")]=b.getAttribute("data-side");
+        errorMsg=""; renderBallot();
+      });
+    });
+    var lockBtn=$("lockBtn");
+    if(lockBtn) lockBtn.addEventListener("click",function(){
+      if(sending||!t.matches.every(function(m){return picks[m.id];})) return;
+      sending=true; errorMsg=""; renderBallot();
+      var mine={}; t.matches.forEach(function(m){mine[m.id]=picks[m.id];});
+      sendVote(t.day,mine).then(function(res){
+        sending=false;
+        if(res&&res.ok){ store.set(votedKey(t.day),mine); }
+        else if(res&&res.error==="already_voted"){ store.set(votedKey(t.day),mine); errorMsg=""; }
+        else if(res&&res.error==="closed"){ errorMsg="Voting just closed for today, so this ballot didn’t count."; refresh(); return; }
+        else errorMsg="Your ballot didn’t go through. Check your connection and try Lock again.";
+        renderBallot();
+      }).catch(function(){
+        sending=false; errorMsg="Your ballot didn’t go through. Check your connection and try Lock again."; renderBallot();
+      });
+    });
+  }
+
+  function renderQuiet(){
+    var n=state.nextOpen, title, body;
+    if(!state.started){
+      $("dayLabel").textContent="Coming soon"; $("dayMeta").textContent="The oven’s preheating";
+      title="The bracket opens soon";
+      body="Sixteen fall favorites are waiting in the wings. Only the first two matchups get revealed on day one.";
+    } else if(n&&n.day===9){
+      $("dayLabel").textContent="The final is closed"; $("dayMeta").textContent="Champion reveal next";
+      title="The votes are in";
+      body="The final has closed and the crown is being polished. The champion gets announced here.";
+    } else if(n){
+      $("dayLabel").textContent="Between rounds"; $("dayMeta").textContent="Next up: "+n.round;
+      title="That’s a wrap for today";
+      body="Today’s votes are counted below. Fresh matchups come out of the oven next.";
+    } else {
+      $("dayLabel").textContent="Between rounds"; $("dayMeta").textContent="Check back soon";
+      title="Nothing on the ballot right now";
+      body="The next round hasn’t been scheduled yet. Check back soon.";
+    }
+    $("stage").innerHTML='<div class="stage-message"><h2>'+title+'</h2><p>'+body+'</p>'+(n?'<span class="when">'+(n.day===9?"Champion revealed ":"Voting opens ")+esc(fmtWhen(n.opensAt))+'</span>':'')+'</div>';
+  }
+
+  function renderChampion(){
+    var c=state.champion, final=state.results[0], pct="";
+    if(final&&final.day===8){
+      var m=final.matches[0], tot=m.a.votes+m.b.votes;
+      if(tot) pct=" with "+Math.round(m[m.winner].votes/tot*100)+"% of the final vote";
+    }
+    $("dayLabel").textContent="And the crown goes to"; $("dayMeta").textContent="Bracket complete";
+    $("stage").innerHTML='<div class="champion">'+(function(p){return p.svg?'<div class="crown pic" aria-hidden="true">'+p.svg+'</div>':'<div class="crown" aria-hidden="true">'+esc(p.text)+'</div>';})(pic(c))+'<div class="champ-label">Your fall champion</div><h2>'+esc(c.name)+'</h2><p>'+esc(c.note)+'. It took the crown'+pct+'. Thanks for voting, and congrats to everyone who called it.</p></div>';
+  }
+
+  function matchRows(m){
+    var tot=m.a.votes+m.b.votes;
+    return ["a","b"].map(function(side){
+      var it=m[side], p=tot?Math.round(it.votes/tot*100):0, won=m.winner===side;
+      return '<div class="result-row"><span class="'+(won?"won":"")+'">'+(function(p){return p.svg?'<span class="mini-pic" aria-hidden="true">'+p.svg+'</span>':esc(p.text)+' ';})(pic(it))+esc(it.name)+(won?'<span class="tag">advances</span>':'')+'</span><span class="result-track"><span class="result-fill" style="display:block;width:'+p+'%"></span></span><em>'+p+'%</em></div>';
+    }).join("");
+  }
+  function dayBlock(r){
+    return r.matches.map(function(m){return '<div class="result-group">'+matchRows(m)+'</div>';}).join("");
+  }
+  function votesLine(r){
+    var total=r.matches.reduce(function(s,m){return Math.max(s,m.a.votes+m.b.votes);},0);
+    return total?total+(total===1?" ballot":" ballots")+" counted":"No ballots this round";
+  }
+  function renderResults(){
+    var rs=state.results||[], el=$("resultsBlock");
+    var list=rs;
+    if(!list.length){el.hidden=true; el.innerHTML=""; return;}
+    var latest=list[0], rest=list.slice(1);
+    var html='<h2>'+(state.champion?"How the final went":"Latest results")+'</h2><p class="sub">'+esc(latest.round)+'. '+votesLine(latest)+'.</p>'+dayBlock(latest);
+    if(rest.length){
+      html+='<details class="earlier"><summary>Earlier results ('+rest.length+(rest.length===1?" day":" days")+')</summary>'+
+        rest.map(function(r){return '<div class="day-block"><h3>'+esc(r.round)+', day '+r.day+'</h3>'+dayBlock(r)+'</div>';}).join("")+'</details>';
+    }
+    el.innerHTML=html; el.hidden=false;
+  }
+
+  /* ---------- Demo mode: used when config.js has no link yet ---------- */
+  var demo=(function(){
+    var close=Date.now()+5*3600000, voted={};
+    var T=function(e,n,o){return{emoji:e,name:n,note:o};};
+    return{
+      state:function(){return{ok:true,started:true,
+        today:{day:2,round:"Opening round",closesAt:close,matches:[
+          {id:"M3",a:T("apple-cider-donut","Apple Cider Donuts","Cinnamon sugar, still warm"),b:T("cinnamon-rolls","Cinnamon Rolls","Icing in every swirl")},
+          {id:"M4",a:T("caramel-apples","Caramel Apples","Sweet, tart, a little messy"),b:T("candy-corn","Candy Corn","No one is neutral on this")}]},
+        nextOpen:{day:3,round:"Opening round",opensAt:close+16*3600000},
+        results:[{day:1,round:"Opening round",matches:[
+          {id:"M1",a:Object.assign(T("pumpkin-pie","Pumpkin Pie","Whipped cream is not optional"),{votes:41}),b:Object.assign(T("apple-pie","Apple Pie","A classic for a reason"),{votes:29}),winner:"a"},
+          {id:"M2",a:Object.assign(T("pumpkin-spice-latte","Pumpkin Spice Latte","The season’s unofficial mascot"),{votes:33}),b:Object.assign(T("hot-apple-cider","Hot Apple Cider","Mulled, with a cinnamon stick"),{votes:37}),winner:"b"}]}],
+        champion:null};},
+      vote:function(day){if(voted[day])return{ok:false,error:"already_voted"};voted[day]=1;return{ok:true};}
+    };
+  })();
+
+  refresh();
+})();
+</script>
+</body>
+</html>
