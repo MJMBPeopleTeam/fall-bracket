@@ -246,11 +246,27 @@ footer{color:#705641}
 /* Gradient lives on the page wrapper so it always runs the full length of the page */
 body{background:#e8b45c;background-attachment:scroll}
 .page{background:radial-gradient(ellipse 60% 900px at 14% 0,rgba(255,224,139,.8),transparent 70%),radial-gradient(ellipse 45% 700px at 92% 420px,rgba(224,120,55,.32),transparent 70%),linear-gradient(170deg,#f3c96d 0%,#edaa53 30%,#df8745 62%,#e8b45c 100%)!important}
-.passcode{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding:12px 14px;border:1px solid #ead9c1;border-radius:11px;background:#fffdf8}
-.passcode label{color:#6f4b37;font-size:12px;font-weight:700}
-.passcode input{flex:1 1 180px;min-width:0;padding:9px 11px;border:1px solid #dcc6a8;border-radius:8px;background:#fff;color:#3f2c22;font:inherit;font-size:14px}
-.passcode input:focus{outline:2px solid #c9733f;outline-offset:1px;border-color:#c9733f}
-.passcode small{flex-basis:100%;color:#8a6d58;font-size:11px}
+.gate-wrap{position:relative;min-height:330px}
+.gate-decoy{filter:blur(7px) saturate(.9);opacity:.75;pointer-events:none;user-select:none}
+.gate-decoy .matches{margin-top:4px}
+.gate-decoy .option-name{color:#4b382d}
+.gate{position:absolute;inset:0;display:grid;place-items:center;padding:16px}
+.gate-panel{width:min(100%,430px);padding:26px 26px 22px;border:1px solid #e6d3b8;border-radius:16px;background:rgba(255,252,246,.96);box-shadow:0 22px 50px rgba(95,52,25,.18);text-align:center}
+.gate-panel .lock{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 10px;border-radius:50%;background:#f6e3c4;font-size:24px}
+.gate-eyebrow{color:#a75232;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.gate-panel h2{margin:6px 0 6px;font-size:clamp(26px,4vw,32px)}
+.gate-panel p{margin:0 0 16px;color:#705747;font-size:14px;line-height:1.55}
+.gate-form{display:flex;gap:8px}
+.gate-form input{flex:1;min-width:0;padding:11px 13px;border:1px solid #dcc6a8;border-radius:10px;background:#fff;color:#3f2c22;font:inherit;font-size:15px;text-align:center}
+.gate-form input:focus{outline:2px solid #c9733f;outline-offset:1px;border-color:#c9733f}
+.gate-form .action{white-space:nowrap}
+.gate-msg{min-height:20px;margin-top:10px;color:#94402c;font-size:13px;font-weight:600}
+.gate-hint{margin-top:4px;color:#8a6d58;font-size:11px}
+.shake{animation:shake .4s ease}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.reveal .matches,.reveal .champion,.reveal+.results-block{animation:unblur .9s ease both}
+@keyframes unblur{from{filter:blur(8px);opacity:.4}to{filter:none;opacity:1}}
+@media(max-width:560px){.gate-wrap{min-height:440px}.gate{padding:8px 0}.gate-form{flex-direction:column}.gate-panel{padding:22px 18px 18px}}
 .stage-message{max-width:560px;padding:6px 2px 4px}
 .stage-message h2{margin:0 0 8px}
 .stage-message p{margin:0;color:#705747;font-size:14px;line-height:1.6}
@@ -326,22 +342,22 @@ body{background:#e8b45c;background-attachment:scroll}
 // Little treat illustrations. Each is drawn on a 64x64 grid.
 var O='stroke="#4a2c1e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"';
 var TREAT_ICONS={
-"pumpkin-pie":'<path d="M8 44 L54 30 L56 40 L12 52 Z" fill="#b9763a" '+O+'/><path d="M8 44 L54 30 L50 24 Q30 22 10 36 Z" fill="#d9682e" '+O+'/><path d="M10 36 Q30 22 50 24 L54 30" fill="none" stroke="#f0b65a" stroke-width="5" stroke-linecap="round"/><path d="M10 36 Q30 22 50 24 L54 30" fill="none" '+O+'/><path d="M26 30 q2-8 8-6 q5 2 1 7 q-4 3-9-1Z" fill="#fff6e6" '+O+'/>',
-"apple-pie":'<ellipse cx="32" cy="38" rx="25" ry="12" fill="#b9763a" '+O+'/><ellipse cx="32" cy="34" rx="25" ry="12" fill="#e3a857" '+O+'/><path d="M18 27 L18 41 M26 23 L26 46 M34 22 L34 46 M42 23 L42 45 M10 31 L54 31 M9 37 L55 37" stroke="#b9763a" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="32" cy="34" rx="25" ry="12" fill="none" '+O+'/>',
-"pumpkin-spice-latte":'<path d="M18 24 L46 24 L42 56 L22 56 Z" fill="#fff6e6" '+O+'/><path d="M19.5 34 L44.5 34 L43.2 44 L20.8 44 Z" fill="#c8822e" '+O+'/><path d="M16 24 Q16 14 26 14 Q28 8 34 9 Q40 8 42 14 Q48 14 48 24 Z" fill="#fffaf2" '+O+'/><circle cx="28" cy="16" r="1.3" fill="#a9442c"/><circle cx="35" cy="13" r="1.3" fill="#a9442c"/><circle cx="40" cy="18" r="1.3" fill="#a9442c"/><circle cx="31" cy="20" r="1.1" fill="#a9442c"/>',
-"hot-apple-cider":'<path d="M14 22 L42 22 L40 54 L16 54 Z" fill="#c7642c" '+O+'/><path d="M41 28 q10 0 10 9 q0 9-11 9" fill="none" '+O+'/><path d="M15 26 L41 26" stroke="#e8a04a" stroke-width="3"/><path d="M38 4 L28 30" stroke="#8a4a26" stroke-width="5" stroke-linecap="round"/><path d="M38 4 L28 30" '+O+' fill="none"/><circle cx="20" cy="22" r="7" fill="#f2b33d" '+O+'/><path d="M20 15 V29 M13 22 H27 M15 17 L25 27 M25 17 L15 27" stroke="#d98b1f" stroke-width="1.2"/>',
-"apple-cider-donut":'<circle cx="32" cy="34" r="22" fill="#d89a52" '+O+'/><circle cx="32" cy="34" r="7" fill="#fff4df" '+O+'/><g fill="#fff6e6"><circle cx="20" cy="26" r="1.6"/><circle cx="28" cy="20" r="1.4"/><circle cx="40" cy="22" r="1.6"/><circle cx="46" cy="32" r="1.4"/><circle cx="44" cy="44" r="1.6"/><circle cx="34" cy="49" r="1.4"/><circle cx="22" cy="45" r="1.6"/><circle cx="17" cy="35" r="1.3"/><circle cx="36" cy="27" r="1.1"/><circle cx="26" cy="40" r="1.1"/></g>',
-"cinnamon-rolls":'<ellipse cx="32" cy="38" rx="24" ry="16" fill="#d89a52" '+O+'/><path d="M32 38 m-3 0 a3 3 0 1 1 6 1 a7 6 0 1 1 -13 -1 a11 9 0 1 1 22 2 a15 12 0 1 1 -30 -2" fill="none" stroke="#8a4a26" stroke-width="2.4" stroke-linecap="round"/><path d="M14 30 q6 6 12 1 q6 7 13 0 q6 6 12 -1" fill="none" stroke="#fffaf2" stroke-width="4" stroke-linecap="round"/>',
-"caramel-apples":'<path d="M32 4 L32 22" stroke="#c9a874" stroke-width="5" stroke-linecap="round"/><path d="M32 4 L32 22" '+O+'/><path d="M32 22 C22 16 10 22 12 38 C14 52 24 58 32 54 C40 58 50 52 52 38 C54 22 42 16 32 22Z" fill="#b8352b" '+O+'/><path d="M13 34 C12 26 20 18 32 23 C44 18 52 26 51 34 C46 40 42 33 38 39 C34 44 30 36 26 41 C22 45 18 36 13 34Z" fill="#c8822e" '+O+'/>',
-"candy-corn":'<path d="M32 6 C40 18 52 40 50 52 Q32 58 14 52 C12 40 24 18 32 6Z" fill="#f4f0e4" '+O+'/><path d="M20.5 32 C17 40 15 47 14 52 Q32 58 50 52 C49 47 47 40 43.5 32 Q32 35 20.5 32Z" fill="#e9862f"/><path d="M15.3 45 C14.6 48 14 50 14 52 Q32 58 50 52 C50 50 49.4 48 48.7 45 Q32 49 15.3 45Z" fill="#f2c13d"/><path d="M32 6 C40 18 52 40 50 52 Q32 58 14 52 C12 40 24 18 32 6Z" fill="none" '+O+'/>',
-"pecan-pie":'<ellipse cx="32" cy="38" rx="25" ry="12" fill="#b9763a" '+O+'/><ellipse cx="32" cy="34" rx="25" ry="12" fill="#e3a857" '+O+'/><ellipse cx="32" cy="34" rx="20" ry="8.5" fill="#7a3d1f" '+O+'/><g fill="#a55a2a" '+O+'><ellipse cx="22" cy="33" rx="4" ry="2.4"/><ellipse cx="32" cy="29.5" rx="4" ry="2.4"/><ellipse cx="42" cy="33" rx="4" ry="2.4"/><ellipse cx="27" cy="38" rx="4" ry="2.4"/><ellipse cx="37" cy="38" rx="4" ry="2.4"/></g>',
-"sweet-potato-casserole":'<path d="M8 34 L56 34 L52 54 Q32 57 12 54 Z" fill="#e7dccb" '+O+'/><path d="M4 34 L12 34 M52 34 L60 34" '+O+'/><path d="M8 34 Q32 22 56 34 Z" fill="#e9862f" '+O+'/><g fill="#fffaf2" '+O+'><rect x="14" y="23" width="9" height="8" rx="3"/><rect x="25" y="19" width="9" height="8" rx="3"/><rect x="36" y="21" width="9" height="8" rx="3"/><rect x="20" y="27" width="8" height="6" rx="2.5"/><rect x="31" y="26" width="8" height="6" rx="2.5"/><rect x="42" y="27" width="7" height="6" rx="2.5"/></g><path d="M17 26 q3-2 5 0 M38 24 q3-2 5 0" stroke="#d8a25a" stroke-width="1.5" fill="none"/><path d="M14 44 h36" stroke="#d2c3ac" stroke-width="2" stroke-linecap="round"/>',
-"smores":'<rect x="10" y="44" width="44" height="10" rx="2" fill="#d6a05a" '+O+'/><rect x="12" y="38" width="40" height="7" rx="1.5" fill="#5a3020" '+O+'/><path d="M10 38 C8 30 14 24 32 24 C50 24 56 30 54 38 Z" fill="#fffaf2" '+O+'/><path d="M20 28 q4-3 9-1" stroke="#d8a25a" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="10" y="12" width="44" height="10" rx="2" fill="#d6a05a" '+O+'/><g fill="#b9763a"><circle cx="18" cy="17" r="1.2"/><circle cx="26" cy="17" r="1.2"/><circle cx="38" cy="17" r="1.2"/><circle cx="46" cy="17" r="1.2"/></g>',
-"hot-chocolate":'<path d="M12 22 L44 22 L42 54 L14 54 Z" fill="#c95b3a" '+O+'/><path d="M43 28 q11 0 11 9 q0 9-12 9" fill="none" '+O+'/><path d="M12.4 22 L43.6 22 L43.3 27 L12.7 27 Z" fill="#5a3020"/><g fill="#fffaf2" '+O+'><rect x="15" y="15" width="8" height="8" rx="2.5"/><rect x="25" y="12" width="8" height="8" rx="2.5"/><rect x="34" y="16" width="8" height="8" rx="2.5"/></g><path d="M18 34 h20 M18 40 h20" stroke="#f0b65a" stroke-width="2" stroke-linecap="round"/>',
-"pumpkin-bread":'<path d="M6 30 Q6 18 22 18 L42 18 Q54 18 54 30 L54 50 L6 50 Z" fill="#b5642f" '+O+'/><path d="M10 28 Q18 22 30 26 Q40 21 50 28" stroke="#e8a04a" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M40 30 L58 30 L58 54 L40 54 Z" fill="#e9973f" '+O+'/><path d="M40 30 Q49 25 58 30" fill="#b5642f" '+O+'/><g fill="#a5542a"><circle cx="45" cy="38" r="1"/><circle cx="52" cy="42" r="1"/><circle cx="47" cy="48" r="1"/></g>',
-"apple-crisp":'<path d="M8 34 L56 34 L52 54 L12 54 Z" fill="#fff6e6" '+O+'/><path d="M8 34 Q14 26 20 31 Q26 25 32 30 Q38 25 44 30 Q50 26 56 34 Z" fill="#c8822e" '+O+'/><g fill="#9a5a28"><circle cx="16" cy="31" r="1.5"/><circle cx="28" cy="29" r="1.5"/><circle cx="48" cy="31" r="1.5"/></g><path d="M24 26 C22 16 28 10 34 10 C42 10 44 18 40 26 Z" fill="#fffaf2" '+O+'/><path d="M8 34 L56 34" '+O+'/><path d="M14 42 h36" stroke="#e3a857" stroke-width="2" stroke-linecap="round"/>',
-"maple-cookies":'<path d="M32 6 L36 18 L44 13 L42 25 L54 23 L48 33 L56 38 L42 42 L44 48 L34 45 L33 58 L31 58 L30 45 L20 48 L22 42 L8 38 L16 33 L10 23 L22 25 L20 13 L28 18 Z" fill="#e3a857" '+O+'/><path d="M32 16 L32 46 M32 30 L44 24 M32 30 L20 24 M32 38 L44 36 M32 38 L20 36" stroke="#c07a33" stroke-width="1.6" stroke-linecap="round"/>',
-"chai-latte":'<path d="M14 18 L46 18 L42 54 L18 54 Z" fill="#fffaf2" fill-opacity=".55" '+O+'/><path d="M15.3 30 L44.7 30 L42 54 L18 54 Z" fill="#c99a6a"/><path d="M14.6 24 L45.4 24 L44.7 30 L15.3 30 Z" fill="#f4e6cf"/><path d="M14 18 L46 18 L42 54 L18 54 Z" fill="none" '+O+'/><path d="M26 10 q-4 -4 0 -7 M34 12 q-4 -4 0 -7" stroke="#b5946f" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48 40 l3 -6 l3 6 l6 3 l-6 3 l-3 6 l-3 -6 l-6 -3 Z" fill="#8a4a26" '+O+'/>'
+"t01":'<path d="M8 44 L54 30 L56 40 L12 52 Z" fill="#b9763a" '+O+'/><path d="M8 44 L54 30 L50 24 Q30 22 10 36 Z" fill="#d9682e" '+O+'/><path d="M10 36 Q30 22 50 24 L54 30" fill="none" stroke="#f0b65a" stroke-width="5" stroke-linecap="round"/><path d="M10 36 Q30 22 50 24 L54 30" fill="none" '+O+'/><path d="M26 30 q2-8 8-6 q5 2 1 7 q-4 3-9-1Z" fill="#fff6e6" '+O+'/>',
+"t02":'<ellipse cx="32" cy="38" rx="25" ry="12" fill="#b9763a" '+O+'/><ellipse cx="32" cy="34" rx="25" ry="12" fill="#e3a857" '+O+'/><path d="M18 27 L18 41 M26 23 L26 46 M34 22 L34 46 M42 23 L42 45 M10 31 L54 31 M9 37 L55 37" stroke="#b9763a" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="32" cy="34" rx="25" ry="12" fill="none" '+O+'/>',
+"t03":'<path d="M18 24 L46 24 L42 56 L22 56 Z" fill="#fff6e6" '+O+'/><path d="M19.5 34 L44.5 34 L43.2 44 L20.8 44 Z" fill="#c8822e" '+O+'/><path d="M16 24 Q16 14 26 14 Q28 8 34 9 Q40 8 42 14 Q48 14 48 24 Z" fill="#fffaf2" '+O+'/><circle cx="28" cy="16" r="1.3" fill="#a9442c"/><circle cx="35" cy="13" r="1.3" fill="#a9442c"/><circle cx="40" cy="18" r="1.3" fill="#a9442c"/><circle cx="31" cy="20" r="1.1" fill="#a9442c"/>',
+"t04":'<path d="M14 22 L42 22 L40 54 L16 54 Z" fill="#c7642c" '+O+'/><path d="M41 28 q10 0 10 9 q0 9-11 9" fill="none" '+O+'/><path d="M15 26 L41 26" stroke="#e8a04a" stroke-width="3"/><path d="M38 4 L28 30" stroke="#8a4a26" stroke-width="5" stroke-linecap="round"/><path d="M38 4 L28 30" '+O+' fill="none"/><circle cx="20" cy="22" r="7" fill="#f2b33d" '+O+'/><path d="M20 15 V29 M13 22 H27 M15 17 L25 27 M25 17 L15 27" stroke="#d98b1f" stroke-width="1.2"/>',
+"t05":'<circle cx="32" cy="34" r="22" fill="#d89a52" '+O+'/><circle cx="32" cy="34" r="7" fill="#fff4df" '+O+'/><g fill="#fff6e6"><circle cx="20" cy="26" r="1.6"/><circle cx="28" cy="20" r="1.4"/><circle cx="40" cy="22" r="1.6"/><circle cx="46" cy="32" r="1.4"/><circle cx="44" cy="44" r="1.6"/><circle cx="34" cy="49" r="1.4"/><circle cx="22" cy="45" r="1.6"/><circle cx="17" cy="35" r="1.3"/><circle cx="36" cy="27" r="1.1"/><circle cx="26" cy="40" r="1.1"/></g>',
+"t06":'<ellipse cx="32" cy="38" rx="24" ry="16" fill="#d89a52" '+O+'/><path d="M32 38 m-3 0 a3 3 0 1 1 6 1 a7 6 0 1 1 -13 -1 a11 9 0 1 1 22 2 a15 12 0 1 1 -30 -2" fill="none" stroke="#8a4a26" stroke-width="2.4" stroke-linecap="round"/><path d="M14 30 q6 6 12 1 q6 7 13 0 q6 6 12 -1" fill="none" stroke="#fffaf2" stroke-width="4" stroke-linecap="round"/>',
+"t07":'<path d="M32 4 L32 22" stroke="#c9a874" stroke-width="5" stroke-linecap="round"/><path d="M32 4 L32 22" '+O+'/><path d="M32 22 C22 16 10 22 12 38 C14 52 24 58 32 54 C40 58 50 52 52 38 C54 22 42 16 32 22Z" fill="#b8352b" '+O+'/><path d="M13 34 C12 26 20 18 32 23 C44 18 52 26 51 34 C46 40 42 33 38 39 C34 44 30 36 26 41 C22 45 18 36 13 34Z" fill="#c8822e" '+O+'/>',
+"t08":'<path d="M32 6 C40 18 52 40 50 52 Q32 58 14 52 C12 40 24 18 32 6Z" fill="#f4f0e4" '+O+'/><path d="M20.5 32 C17 40 15 47 14 52 Q32 58 50 52 C49 47 47 40 43.5 32 Q32 35 20.5 32Z" fill="#e9862f"/><path d="M15.3 45 C14.6 48 14 50 14 52 Q32 58 50 52 C50 50 49.4 48 48.7 45 Q32 49 15.3 45Z" fill="#f2c13d"/><path d="M32 6 C40 18 52 40 50 52 Q32 58 14 52 C12 40 24 18 32 6Z" fill="none" '+O+'/>',
+"t09":'<ellipse cx="32" cy="38" rx="25" ry="12" fill="#b9763a" '+O+'/><ellipse cx="32" cy="34" rx="25" ry="12" fill="#e3a857" '+O+'/><ellipse cx="32" cy="34" rx="20" ry="8.5" fill="#7a3d1f" '+O+'/><g fill="#a55a2a" '+O+'><ellipse cx="22" cy="33" rx="4" ry="2.4"/><ellipse cx="32" cy="29.5" rx="4" ry="2.4"/><ellipse cx="42" cy="33" rx="4" ry="2.4"/><ellipse cx="27" cy="38" rx="4" ry="2.4"/><ellipse cx="37" cy="38" rx="4" ry="2.4"/></g>',
+"t10":'<path d="M8 34 L56 34 L52 54 Q32 57 12 54 Z" fill="#e7dccb" '+O+'/><path d="M4 34 L12 34 M52 34 L60 34" '+O+'/><path d="M8 34 Q32 22 56 34 Z" fill="#e9862f" '+O+'/><g fill="#fffaf2" '+O+'><rect x="14" y="23" width="9" height="8" rx="3"/><rect x="25" y="19" width="9" height="8" rx="3"/><rect x="36" y="21" width="9" height="8" rx="3"/><rect x="20" y="27" width="8" height="6" rx="2.5"/><rect x="31" y="26" width="8" height="6" rx="2.5"/><rect x="42" y="27" width="7" height="6" rx="2.5"/></g><path d="M17 26 q3-2 5 0 M38 24 q3-2 5 0" stroke="#d8a25a" stroke-width="1.5" fill="none"/><path d="M14 44 h36" stroke="#d2c3ac" stroke-width="2" stroke-linecap="round"/>',
+"t11":'<rect x="10" y="44" width="44" height="10" rx="2" fill="#d6a05a" '+O+'/><rect x="12" y="38" width="40" height="7" rx="1.5" fill="#5a3020" '+O+'/><path d="M10 38 C8 30 14 24 32 24 C50 24 56 30 54 38 Z" fill="#fffaf2" '+O+'/><path d="M20 28 q4-3 9-1" stroke="#d8a25a" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="10" y="12" width="44" height="10" rx="2" fill="#d6a05a" '+O+'/><g fill="#b9763a"><circle cx="18" cy="17" r="1.2"/><circle cx="26" cy="17" r="1.2"/><circle cx="38" cy="17" r="1.2"/><circle cx="46" cy="17" r="1.2"/></g>',
+"t12":'<path d="M12 22 L44 22 L42 54 L14 54 Z" fill="#c95b3a" '+O+'/><path d="M43 28 q11 0 11 9 q0 9-12 9" fill="none" '+O+'/><path d="M12.4 22 L43.6 22 L43.3 27 L12.7 27 Z" fill="#5a3020"/><g fill="#fffaf2" '+O+'><rect x="15" y="15" width="8" height="8" rx="2.5"/><rect x="25" y="12" width="8" height="8" rx="2.5"/><rect x="34" y="16" width="8" height="8" rx="2.5"/></g><path d="M18 34 h20 M18 40 h20" stroke="#f0b65a" stroke-width="2" stroke-linecap="round"/>',
+"t13":'<path d="M6 30 Q6 18 22 18 L42 18 Q54 18 54 30 L54 50 L6 50 Z" fill="#b5642f" '+O+'/><path d="M10 28 Q18 22 30 26 Q40 21 50 28" stroke="#e8a04a" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M40 30 L58 30 L58 54 L40 54 Z" fill="#e9973f" '+O+'/><path d="M40 30 Q49 25 58 30" fill="#b5642f" '+O+'/><g fill="#a5542a"><circle cx="45" cy="38" r="1"/><circle cx="52" cy="42" r="1"/><circle cx="47" cy="48" r="1"/></g>',
+"t14":'<path d="M8 34 L56 34 L52 54 L12 54 Z" fill="#fff6e6" '+O+'/><path d="M8 34 Q14 26 20 31 Q26 25 32 30 Q38 25 44 30 Q50 26 56 34 Z" fill="#c8822e" '+O+'/><g fill="#9a5a28"><circle cx="16" cy="31" r="1.5"/><circle cx="28" cy="29" r="1.5"/><circle cx="48" cy="31" r="1.5"/></g><path d="M24 26 C22 16 28 10 34 10 C42 10 44 18 40 26 Z" fill="#fffaf2" '+O+'/><path d="M8 34 L56 34" '+O+'/><path d="M14 42 h36" stroke="#e3a857" stroke-width="2" stroke-linecap="round"/>',
+"t15":'<path d="M32 6 L36 18 L44 13 L42 25 L54 23 L48 33 L56 38 L42 42 L44 48 L34 45 L33 58 L31 58 L30 45 L20 48 L22 42 L8 38 L16 33 L10 23 L22 25 L20 13 L28 18 Z" fill="#e3a857" '+O+'/><path d="M32 16 L32 46 M32 30 L44 24 M32 30 L20 24 M32 38 L44 36 M32 38 L20 36" stroke="#c07a33" stroke-width="1.6" stroke-linecap="round"/>',
+"t16":'<path d="M14 18 L46 18 L42 54 L18 54 Z" fill="#fffaf2" fill-opacity=".55" '+O+'/><path d="M15.3 30 L44.7 30 L42 54 L18 54 Z" fill="#c99a6a"/><path d="M14.6 24 L45.4 24 L44.7 30 L15.3 30 Z" fill="#f4e6cf"/><path d="M14 18 L46 18 L42 54 L18 54 Z" fill="none" '+O+'/><path d="M26 10 q-4 -4 0 -7 M34 12 q-4 -4 0 -7" stroke="#b5946f" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48 40 l3 -6 l3 6 l6 3 l-6 3 l-3 6 l-3 -6 l-6 -3 Z" fill="#8a4a26" '+O+'/>'
 };
 function treatIconSvg(key,label){
   var body=TREAT_ICONS[key];
@@ -365,7 +381,7 @@ function treatIconSvg(key,label){
   var slug=function(s){return String(s||"").toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");};
   // A treat's picture: a drawn illustration when the Sheet names one (or the treat's name matches one), otherwise the emoji typed in.
   var pic=function(item){
-    var key=TREAT_ICONS[item.emoji]?item.emoji:TREAT_ICONS[slug(item.name)]?slug(item.name):null;
+    var key=TREAT_ICONS[item.emoji]?item.emoji:null;
     return key?{svg:treatIconSvg(key,"")}:{text:item.emoji||""};
   };
   var store={get:function(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
@@ -376,16 +392,18 @@ function treatIconSvg(key,label){
     store.set("mbe-fall-voter",voter);
   }
 
-  var state=null, picks={}, sending=false, errorMsg="", timer=null, codeDraft="";
+  var state=null, picks={}, sending=false, errorMsg="", timer=null, gateMsg="", gateBusy=false, revealNext=false;
 
   var fmtTime=function(ms){return new Date(ms).toLocaleTimeString([], {hour:"numeric",minute:"2-digit",timeZoneName:"short"});};
   var fmtWhen=function(ms){return new Date(ms).toLocaleString([], {weekday:"long",month:"long",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"});};
   var votedKey=function(day){return (DEMO?"mbe-fall-demo-voted-":"mbe-fall-voted-day-")+day;};
 
   /* ---------- Talking to the ballot box ---------- */
-  function fetchState(){
+  var savedCode=function(){return (store.get("mbe-fall-code")||"").trim();};
+  var forgetCode=function(){try{localStorage.removeItem("mbe-fall-code");}catch(e){}};
+  function fetchState(code){
     if(DEMO) return Promise.resolve(demo.state());
-    return rpc("get_state");
+    return rpc("get_state",{p_code:code==null?savedCode():code});
   }
   function sendVote(day,p,code){
     if(DEMO) return Promise.resolve(demo.vote(day,p));
@@ -396,6 +414,7 @@ function treatIconSvg(key,label){
     fetchState().then(function(s){
       if(!s||!s.ok) throw new Error("bad");
       var prevDay=state&&state.today&&state.today.day;
+      if(s.gated&&savedCode()){ forgetCode(); gateMsg="The passcode has changed since your last visit. Grab the new one from the Teams post."; }
       state=s;
       if(!s.today||s.today.day!==prevDay) picks={};
       errorMsg="";
@@ -421,10 +440,53 @@ function treatIconSvg(key,label){
   /* ---------- Rendering ---------- */
   function render(){
     $("demoFlag").innerHTML=DEMO?'<span class="demo-flag">Demo mode</span>':"";
-    if(state.champion) renderChampion();
+    if(state.gated) renderGate();
+    else if(state.champion) renderChampion();
     else if(state.today) renderBallot();
     else renderQuiet();
     renderResults();
+    var stage=$("stage");
+    if(revealNext){ revealNext=false; stage.classList.add("reveal"); setTimeout(function(){stage.classList.remove("reveal");},1200); }
+  }
+
+  /* ---------- The front door ---------- */
+  var NOPES=["Close, but no pie. Check the Teams post and try again.","Not quite. The crumble stays under wraps.","Nope. The oven mitts stay on.","That’s not it. The bakery door stays shut."];
+  var nopeIdx=0;
+  function renderGate(){
+    var t=state.today, n=(t&&t.matchCount)||2;
+    $("dayLabel").textContent=t?"Today’s bake-off":"Bake-off results";
+    $("dayMeta").textContent="Passcode, please";
+    var card=function(i){return '<article class="match"><div class="match-top"><span>'+(n===1?"The final":"Matchup "+(i+1))+'</span><span>Pick one</span></div><div class="options">'+
+      '<span class="option"><span class="option-icon" aria-hidden="true">🍂</span><span class="option-name">Mystery treat</span><span class="option-note">Recipe classified</span></span><span class="vs">vs</span>'+
+      '<span class="option"><span class="option-icon" aria-hidden="true">🍁</span><span class="option-name">Secret contender</span><span class="option-note">Smells amazing</span></span></div></article>';};
+    var decoy='<div class="card-head"><div><div class="card-eyebrow">Fresh from the oven</div><h2>Choose today’s treats</h2></div></div><div class="matches"'+(n===1?' style="grid-template-columns:1fr;max-width:460px;margin:0 auto"':'')+'>'+[0,1].slice(0,n).map(card).join("")+'</div>';
+    var copy=t?"Today’s treats are behind the counter. Whisper the passcode from the Teams post and we’ll slide them right over."
+              :"The results are behind the counter. Whisper the passcode from the Teams post to see how the treats are doing.";
+    $("stage").innerHTML='<div class="gate-wrap"><div class="gate-decoy" aria-hidden="true">'+decoy+'</div><div class="gate"><div class="gate-panel" id="gatePanel">'+
+      '<div class="lock" aria-hidden="true">🥧</div><div class="gate-eyebrow">Staff-only tasting</div><h2>What’s the magic word?</h2><p>'+copy+'</p>'+
+      '<form class="gate-form" id="gateForm" novalidate><label class="sr-only" for="gateInput" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Passcode</label>'+
+      '<input id="gateInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Psst…" '+(gateBusy?"disabled":"")+'>'+
+      '<button class="action" type="submit" '+(gateBusy?"disabled":"")+'>'+(gateBusy?"Checking…":"Let me in")+'</button></form>'+
+      '<div class="gate-msg" role="status">'+esc(gateMsg)+'</div><div class="gate-hint">You’ll only need it once on this device.</div></div></div></div>';
+    var input=$("gateInput");
+    $("gateForm").addEventListener("submit",function(e){
+      e.preventDefault();
+      var code=input.value.trim(); if(!code||gateBusy) return;
+      gateBusy=true; gateMsg=""; var typed=code; renderGate(); $("gateInput").value=typed;
+      fetchState(code).then(function(s){
+        gateBusy=false;
+        if(!s||!s.ok) throw new Error("bad");
+        if(s.gated){
+          gateMsg=NOPES[nopeIdx++%NOPES.length]; renderGate();
+          var p=$("gatePanel"); p.classList.add("shake"); setTimeout(function(){p.classList.remove("shake");},450);
+          $("gateInput").focus(); return;
+        }
+        store.set("mbe-fall-code",code); gateMsg=""; state=s; picks={}; revealNext=true; render(); schedule();
+      }).catch(function(){
+        gateBusy=false; gateMsg="The ballot box isn’t answering. Try again in a moment."; renderGate(); $("gateInput").value=typed;
+      });
+    });
+    if(!gateBusy) input.focus({preventScroll:true});
   }
 
   function renderBallot(){
@@ -444,21 +506,13 @@ function treatIconSvg(key,label){
             '<span class="option-name">'+esc(item.name)+'</span><span class="option-note">'+esc(item.note)+'</span></button>'+(i===0?'<span class="vs" aria-hidden="true">vs</span>':'');
         }).join("")+'</div></article>';
     }).join("")+'</div>';
-    var savedCode=store.get("mbe-fall-code");
-    var needCode=!locked&&!DEMO&&!savedCode;
-    var ready=t.matches.every(function(m){return picks[m.id];})&&(!needCode||codeDraft.trim());
-    if(needCode) html+='<div class="passcode"><label for="codeInput">Team passcode</label><input id="codeInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="From the Teams post" value="'+esc(codeDraft)+'"><small>You only need to enter this once.</small></div>';
+    var ready=t.matches.every(function(m){return picks[m.id];});
     var hint=locked?"Your picks are in. Results show up here when voting closes at "+fmtTime(t.closesAt)+"."
       :errorMsg?'<span class="error-text">'+esc(errorMsg)+'</span>'
       :(n===1?"Pick the treat you want crowned. One shot, no take-backs.":"Pick one favorite in each matchup, then lock your ballot. No take-backs.");
     html+='<div class="ballot-footer"><div class="ballot-hint">'+hint+'</div>'+
       '<button class="action" id="lockBtn" type="button" '+(locked||!ready||sending?"disabled":"")+'>'+(locked?'Ballot locked <span aria-hidden="true">✓</span>':sending?"Locking…":(n===1?"Lock my pick":"Lock today’s votes"))+'</button></div>';
     $("stage").innerHTML=html;
-    var codeInput=$("codeInput");
-    if(codeInput) codeInput.addEventListener("input",function(){
-      codeDraft=codeInput.value; errorMsg="";
-      var btn=$("lockBtn"); if(btn) btn.disabled=!(t.matches.every(function(m){return picks[m.id];})&&codeDraft.trim());
-    });
 
     $("stage").querySelectorAll(".option").forEach(function(b){
       b.addEventListener("click",function(){
@@ -469,14 +523,14 @@ function treatIconSvg(key,label){
     });
     var lockBtn=$("lockBtn");
     if(lockBtn) lockBtn.addEventListener("click",function(){
-      var code=(store.get("mbe-fall-code")||codeDraft).trim();
-      if(sending||!t.matches.every(function(m){return picks[m.id];})||(!DEMO&&!code)) return;
+      var code=savedCode();
+      if(sending||!t.matches.every(function(m){return picks[m.id];})) return;
       sending=true; errorMsg=""; renderBallot();
       var mine={}; t.matches.forEach(function(m){mine[m.id]=picks[m.id];});
       sendVote(t.day,mine,code).then(function(res){
         sending=false;
-        if(res&&res.ok){ store.set(votedKey(t.day),mine); store.set("mbe-fall-code",code); }
-        else if(res&&res.error==="wrong_code"){ try{localStorage.removeItem("mbe-fall-code");}catch(e){} codeDraft=""; errorMsg="That passcode didn’t match. Check the Teams post and try again."; }
+        if(res&&res.ok){ store.set(votedKey(t.day),mine); }
+        else if(res&&res.error==="wrong_code"){ forgetCode(); gateMsg="The passcode changed while you were picking. Grab the new one from the Teams post."; refresh(); return; }
         else if(res&&res.error==="already_voted"){ store.set(votedKey(t.day),mine); errorMsg=""; }
         else if(res&&res.error==="closed"){ errorMsg="Voting just closed for today, so this ballot didn’t count."; refresh(); return; }
         else errorMsg="Your ballot didn’t go through. Check your connection and try Lock again.";
@@ -553,12 +607,12 @@ function treatIconSvg(key,label){
     return{
       state:function(){return{ok:true,started:true,
         today:{day:2,round:"Opening round",closesAt:close,matches:[
-          {id:"M3",a:T("apple-cider-donut","Apple Cider Donuts","Cinnamon sugar, still warm"),b:T("cinnamon-rolls","Cinnamon Rolls","Icing in every swirl")},
-          {id:"M4",a:T("caramel-apples","Caramel Apples","Sweet, tart, a little messy"),b:T("candy-corn","Candy Corn","No one is neutral on this")}]},
+          {id:"M3",a:T("🍰","Sample Treat A","Demo only"),b:T("🍪","Sample Treat B","Demo only")},
+          {id:"M4",a:T("🧁","Sample Treat C","Demo only"),b:T("🍩","Sample Treat D","Demo only")}]},
         nextOpen:{day:3,round:"Opening round",opensAt:close+16*3600000},
         results:[{day:1,round:"Opening round",matches:[
-          {id:"M1",a:Object.assign(T("pumpkin-pie","Pumpkin Pie","Whipped cream is not optional"),{votes:41}),b:Object.assign(T("apple-pie","Apple Pie","A classic for a reason"),{votes:29}),winner:"a"},
-          {id:"M2",a:Object.assign(T("pumpkin-spice-latte","Pumpkin Spice Latte","The season’s unofficial mascot"),{votes:33}),b:Object.assign(T("hot-apple-cider","Hot Apple Cider","Mulled, with a cinnamon stick"),{votes:37}),winner:"b"}]}],
+          {id:"M1",a:Object.assign(T("🍮","Sample Treat E","Demo only"),{votes:41}),b:Object.assign(T("🥮","Sample Treat F","Demo only"),{votes:29}),winner:"a"},
+          {id:"M2",a:Object.assign(T("🍯","Sample Treat G","Demo only"),{votes:33}),b:Object.assign(T("🥐","Sample Treat H","Demo only"),{votes:37}),winner:"b"}]}],
         champion:null};},
       vote:function(day){if(voted[day])return{ok:false,error:"already_voted"};voted[day]=1;return{ok:true};}
     };
