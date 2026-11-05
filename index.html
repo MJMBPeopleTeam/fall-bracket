@@ -246,6 +246,11 @@ footer{color:#705641}
 /* Gradient lives on the page wrapper so it always runs the full length of the page */
 body{background:#e8b45c;background-attachment:scroll}
 .page{background:radial-gradient(ellipse 60% 900px at 14% 0,rgba(255,224,139,.8),transparent 70%),radial-gradient(ellipse 45% 700px at 92% 420px,rgba(224,120,55,.32),transparent 70%),linear-gradient(170deg,#f3c96d 0%,#edaa53 30%,#df8745 62%,#e8b45c 100%)!important}
+.passcode{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding:12px 14px;border:1px solid #ead9c1;border-radius:11px;background:#fffdf8}
+.passcode label{color:#6f4b37;font-size:12px;font-weight:700}
+.passcode input{flex:1 1 180px;min-width:0;padding:9px 11px;border:1px solid #dcc6a8;border-radius:8px;background:#fff;color:#3f2c22;font:inherit;font-size:14px}
+.passcode input:focus{outline:2px solid #c9733f;outline-offset:1px;border-color:#c9733f}
+.passcode small{flex-basis:100%;color:#8a6d58;font-size:11px}
 .stage-message{max-width:560px;padding:6px 2px 4px}
 .stage-message h2{margin:0 0 8px}
 .stage-message p{margin:0;color:#705747;font-size:14px;line-height:1.6}
@@ -371,7 +376,7 @@ function treatIconSvg(key,label){
     store.set("mbe-fall-voter",voter);
   }
 
-  var state=null, picks={}, sending=false, errorMsg="", timer=null;
+  var state=null, picks={}, sending=false, errorMsg="", timer=null, codeDraft="";
 
   var fmtTime=function(ms){return new Date(ms).toLocaleTimeString([], {hour:"numeric",minute:"2-digit",timeZoneName:"short"});};
   var fmtWhen=function(ms){return new Date(ms).toLocaleString([], {weekday:"long",month:"long",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"});};
@@ -382,9 +387,9 @@ function treatIconSvg(key,label){
     if(DEMO) return Promise.resolve(demo.state());
     return rpc("get_state");
   }
-  function sendVote(day,p){
+  function sendVote(day,p,code){
     if(DEMO) return Promise.resolve(demo.vote(day,p));
-    return rpc("cast_vote",{p_day:day,p_picks:p,p_voter:voter});
+    return rpc("cast_vote",{p_day:day,p_picks:p,p_voter:voter,p_code:code});
   }
 
   function refresh(){
@@ -439,13 +444,21 @@ function treatIconSvg(key,label){
             '<span class="option-name">'+esc(item.name)+'</span><span class="option-note">'+esc(item.note)+'</span></button>'+(i===0?'<span class="vs" aria-hidden="true">vs</span>':'');
         }).join("")+'</div></article>';
     }).join("")+'</div>';
-    var ready=t.matches.every(function(m){return picks[m.id];});
+    var savedCode=store.get("mbe-fall-code");
+    var needCode=!locked&&!DEMO&&!savedCode;
+    var ready=t.matches.every(function(m){return picks[m.id];})&&(!needCode||codeDraft.trim());
+    if(needCode) html+='<div class="passcode"><label for="codeInput">Team passcode</label><input id="codeInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="From the Teams post" value="'+esc(codeDraft)+'"><small>You only need to enter this once.</small></div>';
     var hint=locked?"Your picks are in. Results show up here when voting closes at "+fmtTime(t.closesAt)+"."
       :errorMsg?'<span class="error-text">'+esc(errorMsg)+'</span>'
       :(n===1?"Pick the treat you want crowned. One shot, no take-backs.":"Pick one favorite in each matchup, then lock your ballot. No take-backs.");
     html+='<div class="ballot-footer"><div class="ballot-hint">'+hint+'</div>'+
       '<button class="action" id="lockBtn" type="button" '+(locked||!ready||sending?"disabled":"")+'>'+(locked?'Ballot locked <span aria-hidden="true">✓</span>':sending?"Locking…":(n===1?"Lock my pick":"Lock today’s votes"))+'</button></div>';
     $("stage").innerHTML=html;
+    var codeInput=$("codeInput");
+    if(codeInput) codeInput.addEventListener("input",function(){
+      codeDraft=codeInput.value; errorMsg="";
+      var btn=$("lockBtn"); if(btn) btn.disabled=!(t.matches.every(function(m){return picks[m.id];})&&codeDraft.trim());
+    });
 
     $("stage").querySelectorAll(".option").forEach(function(b){
       b.addEventListener("click",function(){
@@ -456,12 +469,14 @@ function treatIconSvg(key,label){
     });
     var lockBtn=$("lockBtn");
     if(lockBtn) lockBtn.addEventListener("click",function(){
-      if(sending||!t.matches.every(function(m){return picks[m.id];})) return;
+      var code=(store.get("mbe-fall-code")||codeDraft).trim();
+      if(sending||!t.matches.every(function(m){return picks[m.id];})||(!DEMO&&!code)) return;
       sending=true; errorMsg=""; renderBallot();
       var mine={}; t.matches.forEach(function(m){mine[m.id]=picks[m.id];});
-      sendVote(t.day,mine).then(function(res){
+      sendVote(t.day,mine,code).then(function(res){
         sending=false;
-        if(res&&res.ok){ store.set(votedKey(t.day),mine); }
+        if(res&&res.ok){ store.set(votedKey(t.day),mine); store.set("mbe-fall-code",code); }
+        else if(res&&res.error==="wrong_code"){ try{localStorage.removeItem("mbe-fall-code");}catch(e){} codeDraft=""; errorMsg="That passcode didn’t match. Check the Teams post and try again."; }
         else if(res&&res.error==="already_voted"){ store.set(votedKey(t.day),mine); errorMsg=""; }
         else if(res&&res.error==="closed"){ errorMsg="Voting just closed for today, so this ballot didn’t count."; refresh(); return; }
         else errorMsg="Your ballot didn’t go through. Check your connection and try Lock again.";
